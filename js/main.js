@@ -1,0 +1,10 @@
+const root = document.documentElement, themeToggle = document.querySelector('.theme-toggle'), themeIcon = document.querySelector('.theme-icon'), menuToggle = document.querySelector('.menu-toggle'), navLinks = document.querySelector('.nav-links');
+function setTheme(t) { root.dataset.theme = t; localStorage.setItem('portfolio-theme', t); themeIcon.textContent = t === 'dark' ? '☀' : '☾'; themeToggle.setAttribute('aria-label', t === 'dark' ? 'Switch to light mode' : 'Switch to dark mode') }
+const saved = localStorage.getItem('portfolio-theme'); setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+themeToggle.addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+menuToggle.addEventListener('click', () => { const open = navLinks.classList.toggle('open'); menuToggle.setAttribute('aria-expanded', open) });
+document.querySelectorAll('.nav-links a').forEach(a => a.addEventListener('click', () => { navLinks.classList.remove('open'); menuToggle.setAttribute('aria-expanded', 'false') }));
+const progress = document.querySelector('.scroll-progress'); addEventListener('scroll', () => { const h = document.documentElement.scrollHeight - innerHeight; progress.style.width = `${h > 0 ? scrollY / h * 100 : 0}%` }, { passive: true });
+const observer = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target) } }), { threshold: .12 }); document.querySelectorAll('.reveal').forEach(e => observer.observe(e));
+const tabs = document.querySelectorAll('.project-tab'), cards = document.querySelectorAll('.project-item'); tabs.forEach(tab => tab.addEventListener('click', () => { tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false') }); tab.classList.add('active'); tab.setAttribute('aria-selected', 'true'); cards.forEach(c => c.classList.toggle('hidden', c.dataset.category !== tab.dataset.filter)) }));
+document.getElementById('year').textContent = new Date().getFullYear();
